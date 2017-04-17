@@ -5,13 +5,13 @@
 #configure winrm script to path 
 - name: configurating winrm path 
   win_file: 
-    path: "{{ context_path }}"
+    path: "{{ config_path }}"
     state: directory
 
 - name: creating configuration winrm path
   template:
     src: "ConfigureRemotingForAnsible.ps1"
-    dest: "{{ context_path }}"
+    dest: "{{ config_path }}"
 
 #create temporal folder for powershell script 
 - name: Creating temporal ps1 execution folder
@@ -32,8 +32,6 @@
     src: "Powershell2.0_upgrade_to_3.0.ps1.j2" 
     dest: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1powershellupgrade'] }}"
 
-
-#install powershell when < 3.0
 - name: upgrade powershell to 3.0 
   win_shell: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1powershellupgrade'] }}"
 
@@ -41,10 +39,9 @@
 - name: Starting ps1 self certificate execution
   win_shell: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1certificate'] }}"    
 
-#execute winrm Config ps1 in path 
-- name: executing winrm config ps1 file 
-  win_shell:  "{{ context_path }}"
-
+- name: test wirm connectivity
+  win_ping:
+    win_pin: 
 #delete temporal self certificate ps1 file
 #- name: Deleteing temporal self certificate ps1 execution folder
 #  win_file:
