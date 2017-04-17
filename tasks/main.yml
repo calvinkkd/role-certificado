@@ -32,7 +32,7 @@
     src: "Powershell2.0_upgrade_to_3.0.ps1.j2" 
     dest: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1powershellupgrade'] }}"
 
-#configuration for new user
+#configuration for new user ..
 - name: Configurating new user for windows server 
   template: 
     src: 'context.sh.j2'
