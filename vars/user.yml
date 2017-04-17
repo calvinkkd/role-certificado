@@ -1,0 +1,7 @@
+---
+#filename: roles/base/vars/main.yml
+#default users accounts for Windows Servers
+users: 
+   dns_account_user:
+       user: Administrator
+       password: Iecisa01

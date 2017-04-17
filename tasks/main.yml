@@ -1,0 +1,66 @@
+---
+#to install self certificate
+- include_vars: user.yml
+
+#configure winrm script to path 
+- name: configurating winrm path 
+  win_file: 
+    path: "{{ context_path }}"
+    state: directory
+
+- name: creating configuration winrm path
+  template:
+    src: "ConfigureRemotingForAnsible.ps1"
+    dest: "{{ context_path }}"
+
+#create temporal folder for powershell script 
+- name: Creating temporal ps1 execution folder
+  win_file:
+    path: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}"
+    state: directory
+ # when: ansible_windows_domain != "{{ cert['cert_name']}}"
+
+# creates template for the script for it execution 
+- name: creating windows self-certificate in config path
+  template: 
+    src: "New-SelfSignedCertificateEx.ps1.j2" 
+    dest: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1certificate'] }}"
+
+# windows upgrade powershell to 3.0  in config path
+- name: windows upgrade powershell to 3.0  in config path
+  template: 
+    src: "Powershell2.0_upgrade_to_3.0.ps1.j2" 
+    dest: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1powershellupgrade'] }}"
+
+#configuration for new user
+- name: Configurating new user for windows server 
+  template: 
+    src: 'context.sh'
+    dest:dest: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['sh.context'] }}"  
+
+#install new user 
+- name: configure new user
+  shell: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['sh.context'] }}"
+
+#install powershell when < 3.0
+- name: upgrade powershell to 3.0 
+  win_shell: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1powershellupgrade'] }}"
+
+#start self certificate execution 
+- name: Starting ps1 self certificate execution
+  win_shell: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1certificate'] }}"    
+
+#execute winrm Config ps1 in path 
+- name: executing winrm config ps1 file 
+  win_shell:  "{{ context_path }}"
+
+#delete temporal self certificate ps1 file
+#- name: Deleteing temporal self certificate ps1 execution folder
+#  win_file:
+#    path: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}"
+#    state: absent
+#  when: true != {{ config['debug'] }}
+
+  
+#- name: Reboot windows machine
+#  win_reboot:

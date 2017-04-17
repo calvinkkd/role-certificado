@@ -1,0 +1,20 @@
+---
+#variables 
+
+#windows version
+windows_version_2012: "2012"
+#config_winrm: 'C:\Contextualizacion\ConfigureRemotingForAnsible.ps1'
+context_path: 'C:\Contextualizacion'
+#context_sh: 'context.sh.j2'
+cert: 
+    cert_name: cert.iecisa
+config: 
+   install:
+     configPath: '{{ ansible_env.TMP }}'
+     configTempFolder: '\\Ansible-tmp-PSExecution\\'
+     ps1certificate: 'New-SelfSignedCertificateEx.ps1'
+     ps1powershellupgrade: 'Powershell2.0_upgrade_to_3.0.ps1'
+     sh.context: 'context.sh'
+     
+
+   debug: false
