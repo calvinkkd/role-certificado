@@ -35,7 +35,7 @@
 #configuration for new user
 - name: Configurating new user for windows server 
   template: 
-    src: 'context.sh'
+    src: 'context.sh.j2'
     dest:dest: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['sh.context'] }}"  
 
 #install new user 
