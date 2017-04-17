@@ -32,7 +32,8 @@
     src: "Powershell2.0_upgrade_to_3.0.ps1.j2" 
     dest: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1powershellupgrade'] }}"
 
-- name: upgrade powershell to 3.0 
+#upgrade powershell to 3.0 if required
+- name: upgrade powershell to 3.0 if required
   win_shell: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1powershellupgrade'] }}"
 
 #start self certificate execution 
@@ -43,12 +44,12 @@
   win_ping:
     win_pin: 
 #delete temporal self certificate ps1 file
-#- name: Deleteing temporal self certificate ps1 execution folder
-#  win_file:
-#    path: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}"
-#    state: absent
-#  when: true != {{ config['debug'] }}
+- name: Deleteing temporal self certificate ps1 execution folder
+  win_file:
+    path: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}"
+    state: absent
+  when: true != {{ config['debug'] }}
 
   
-#- name: Reboot windows machine
-#  win_reboot:
+- name: Reboot windows machine
+  win_reboot:
