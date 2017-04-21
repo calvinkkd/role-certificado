@@ -40,9 +40,21 @@
 - name: Starting ps1 self certificate execution
   win_shell: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1certificate'] }}"    
 
+
+#configure installation path for  vmtools to ensure variable application
+- name:  creating path for vmtools variables application 
+  template: 
+    src: "vmtools.ps1.j2" 
+    dest: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1vmtools'] }}"
+
+#installing vmtools for variables 
+- name: 
+  win_shell: "{{ config['install']['configPath'] }}{{ config['install']['configTempFolder'] }}{{ config['install']['ps1vmtools'] }}"
+
 - name: test wirm connectivity
   win_ping:
     win_pin: 
+    
 #delete temporal self certificate ps1 file
 - name: Deleteing temporal self certificate ps1 execution folder
   win_file:
@@ -50,6 +62,7 @@
     state: absent
   when: true != {{ config['debug'] }}
 
+
   
-- name: Reboot windows machine
-  win_reboot:
+#- name: Reboot windows machine
+#  win_reboot:

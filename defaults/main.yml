@@ -15,6 +15,6 @@ config:
      configTempFolder: '\\Ansible-tmp-PSExecution\\'
      ps1certificate: 'New-SelfSignedCertificateEx.ps1'
      ps1powershellupgrade: 'Powershell2.0_upgrade_to_3.0.ps1'
-        
+     ps1vmtools: 'vmtools.ps1'   
 
    debug: false

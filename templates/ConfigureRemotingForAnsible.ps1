@@ -70,7 +70,7 @@ function addLocalUser($context) {
 
         # Add user to local Administrators
         # ATTENTION - language/regional settings have influence on this group, "Administrators" fits for English
-        $groups = (Get-WmiObject -Class "Win32_Group" | where { $_.SID -like "S-1-5-32-544" } | select -ExpandProperty Name)
+        $groups = (Get-WmiObject -Class "Win32_Group" | Where-Object { $_.SID -like "S-1-5-32-544" } | Select-Object -ExpandProperty Name)
 
         foreach ($grp in $groups) {
         if([ADSI]::Exists("WinNT://$computerName/$grp,group")) {
@@ -129,7 +129,7 @@ function configureNetwork($context) {
         $nic = $false
         while(!$nic) {
             $nic = Get-WMIObject Win32_NetworkAdapterConfiguration | `
-                    where {$_.IPEnabled -eq "TRUE" -and $_.MACAddress -eq $mac}
+                    Where-Object {$_.IPEnabled -eq "TRUE" -and $_.MACAddress -eq $mac}
             Start-Sleep -s 1
         }
 
@@ -164,7 +164,7 @@ function configureNetwork($context) {
             # We need the connection ID (i.e. "Local Area Connection",
             # which can be discovered from the NetworkAdapter object
             $na = Get-WMIObject Win32_NetworkAdapter | `
-                    where {$_.deviceId -eq $nic.index}
+                    Where-Object {$_.deviceId -eq $nic.index}
 
             netsh interface ipv6 add address $na.NetConnectionId $ip6
 
@@ -246,7 +246,7 @@ function runScripts($context, $contextLetter)
 ################################################################################
 
 # Get all drives and select only the one that has "CONTEXT" as a label
-$contextDrive = Get-WMIObject Win32_Volume | ? { $_.Label -eq "CONTEXT" }
+$contextDrive = Get-WMIObject Win32_Volume | Where-Object { $_.Label -eq "CONTEXT" }
 
 if ($contextDrive) {
     # At this point we can obtain the letter of the contextDrive
